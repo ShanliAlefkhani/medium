@@ -10,6 +10,7 @@ class RateSerializer(serializers.ModelSerializer):
 class ArticleSerializer(serializers.ModelSerializer):
 	ratings = RateSerializer(source='rate_set', many=True)
 	number_of_users_rated = serializers.ReadOnlyField()
+	ratings_average = serializers.ReadOnlyField()
 
 	class Meta:
 		model = Article
