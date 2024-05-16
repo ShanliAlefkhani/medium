@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Avg
+from django.db.models import Avg, F
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from timestampedmodel import TimestampedModel
@@ -15,8 +15,8 @@ class Article(TimestampedModel):
 
 	@property
 	def ratings_average(self):
-		print(self.ratings.aggregate(Avg('rate__star')).get('rate__star__avg'))
-		return self.ratings.aggregate(Avg('rate__star')).get('rate__star__avg')
+		weighted_avg = self.ratings.aggregate(weighted_avg=Avg(F('rate__star') * F('rate__ratio')))['weighted_avg']
+		return weighted_avg / 100 if weighted_avg else 0
 
 class Rate(TimestampedModel):
 	article = models.ForeignKey(Article, on_delete=models.CASCADE)
