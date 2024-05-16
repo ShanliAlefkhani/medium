@@ -2,13 +2,7 @@ from rest_framework import serializers
 from articles.models import Article, Rate
 
 
-class RateSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Rate
-		fields = '__all__'
-
 class ArticleSerializer(serializers.ModelSerializer):
-	ratings = RateSerializer(source='rate_set', many=True)
 	number_of_users_rated = serializers.ReadOnlyField()
 	ratings_average = serializers.ReadOnlyField()
 	user_rate = serializers.SerializerMethodField()
@@ -26,5 +20,9 @@ class ArticleSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Article
-		fields = '__all__'
+		fields = ['title', 'number_of_users_rated', 'ratings_average', 'user_rate']
 
+class RateSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Rate
+		fields = ['article', 'star']
