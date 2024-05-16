@@ -13,6 +13,8 @@ class RateCreate(generics.CreateAPIView):
 	serializer_class = RateSerializer
 
 	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True) 
 		rate, created = Rate.objects.update_or_create(
 			user=request.user,
 			article_id=request.data.get('article'),
