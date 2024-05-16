@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Avg
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
 from timestampedmodel import TimestampedModel
 
 
@@ -20,5 +21,9 @@ class Article(TimestampedModel):
 class Rate(TimestampedModel):
 	article = models.ForeignKey(Article, on_delete=models.CASCADE)
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	star = models.IntegerField()
+	star = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+	ratio = models.IntegerField(default=100, validators=[MinValueValidator(0), MaxValueValidator(100)])
+
+	class Meta:
+		unique_together = ('article', 'user')
 
