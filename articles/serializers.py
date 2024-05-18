@@ -3,7 +3,6 @@ from articles.models import Article, Rate
 
 
 class ArticleSerializer(serializers.ModelSerializer):
-	ratings_average = serializers.ReadOnlyField()
 	user_rate = serializers.SerializerMethodField()
 
 	def get_user_rate(self, obj):
@@ -19,7 +18,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Article
-		fields = ['title', 'ratings_count', 'ratings_average', 'user_rate']
+		fields = ['title', 'star_count', 'star_average', 'user_rate']
 
 class RateSerializer(serializers.ModelSerializer):
 	class Meta:

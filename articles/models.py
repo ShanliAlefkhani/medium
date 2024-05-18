@@ -10,7 +10,8 @@ from django.dispatch import receiver
 class Article(TimestampedModel):
 	title = models.CharField(max_length=100)
 	ratings = models.ManyToManyField(User, through='Rate')
-	ratings_count = models.IntegerField(default=0)
+	star_count = models.IntegerField(default=0)
+	star_average = models.FloatField(default=0)
 
 	@property
 	def ratings_average(self):
@@ -27,9 +28,10 @@ class Rate(TimestampedModel):
 		unique_together = ('article', 'user')
 
 @receiver(post_save, sender=Rate)
-def my_model_created_handler(sender, instance, created, **kwargs):
+def rate_post_save_handler(sender, instance, created, **kwargs):
 	if created:
-		article = Article.objects.get(id=instance.article_id)
-		article.ratings_count += 1
+		article = instance.article
+		article.star_average = ((article.star_average * article.star_count) + int(instance.star)) / (article.star_count + 1)
+		article.star_count += 1
 		article.save()
 
