@@ -10,8 +10,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 		if request and request.user.is_authenticated:
 			user = request.user
 			try:
-				rate = Rate.objects.get(article=obj, user=user)
-				return rate.star
+				return Rate.objects.get(article=obj, user=user).star
 			except Rate.DoesNotExist:
 				return None
 		return None

@@ -1,9 +1,8 @@
 from django.db import models
-from django.db.models import Avg, F
+from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from timestampedmodel import TimestampedModel
-from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
@@ -21,6 +20,9 @@ class Rate(TimestampedModel):
 
 	class Meta:
 		unique_together = ('article', 'user')
+		indexes = [
+			models.Index(fields=['article', 'user']),
+		]
 
 @receiver(post_save, sender=Rate)
 def rate_post_save_handler(sender, instance, created, **kwargs):
