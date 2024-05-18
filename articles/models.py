@@ -3,15 +3,14 @@ from django.db.models import Avg, F
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from timestampedmodel import TimestampedModel
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Article(TimestampedModel):
 	title = models.CharField(max_length=100)
 	ratings = models.ManyToManyField(User, through='Rate')
-
-	@property
-	def number_of_users_rated(self):
-		return self.ratings.count()
+	ratings_count = models.IntegerField(default=0)
 
 	@property
 	def ratings_average(self):
@@ -26,4 +25,11 @@ class Rate(TimestampedModel):
 
 	class Meta:
 		unique_together = ('article', 'user')
+
+@receiver(post_save, sender=Rate)
+def my_model_created_handler(sender, instance, created, **kwargs):
+	if created:
+		article = Article.objects.get(id=instance.article_id)
+		article.ratings_count += 1
+		article.save()
 
