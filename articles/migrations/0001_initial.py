@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='article',
-            name='ratings',
+            name='rates',
             field=models.ManyToManyField(through='articles.Rate', to=settings.AUTH_USER_MODEL),
         ),
     ]

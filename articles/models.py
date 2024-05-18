@@ -9,14 +9,9 @@ from django.dispatch import receiver
 
 class Article(TimestampedModel):
 	title = models.CharField(max_length=100)
-	ratings = models.ManyToManyField(User, through='Rate')
+	rates = models.ManyToManyField(User, through='Rate')
 	star_count = models.IntegerField(default=0)
 	star_average = models.FloatField(default=0)
-
-	@property
-	def ratings_average(self):
-		weighted_avg = self.ratings.aggregate(weighted_avg=Avg(F('rate__star') * F('rate__ratio')))['weighted_avg']
-		return weighted_avg / 100 if weighted_avg else 0
 
 class Rate(TimestampedModel):
 	article = models.ForeignKey(Article, on_delete=models.CASCADE)

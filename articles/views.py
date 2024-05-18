@@ -22,3 +22,4 @@ class RateCreate(generics.CreateAPIView):
 		)
 		serializer = self.get_serializer(rate)
 		return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
+

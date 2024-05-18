@@ -24,3 +24,4 @@ class RateSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Rate
 		fields = ['article', 'star']
+
